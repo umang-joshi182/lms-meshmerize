@@ -8,6 +8,7 @@ Submission for the nine selection tasks (ESP32, Arduino framework, C++; hardware
 | Path | Contents |
 |------|----------|
 | `src/task1_basic.cpp` | Task 1: weighted-centroid line position and motor clamp, with example inputs and outputs |
+| `docs/task1_notes.md` | Task 1: explanation of the logic |
 | `src/lms_esp32/lms_core.h` | Task 9: hardware-independent PD/PID control logic (centroid, PID, lost-line handling) |
 | `src/lms_esp32/lms_esp32.ino` | Task 9: ESP32 sketch (pins, calibration, motor driver, telemetry) |
 | `src/test/test_pid.cpp` | Task 9: desktop test that runs the control logic on hard-coded sensor samples |
