@@ -15,3 +15,15 @@
 | | Shipping | | | ___ | | | |
 | | Contingency (10%) | | | ___ | | | |
 | | **Total** | | | **___** | | | |
+## Additional items required by the competition rules
+
+| # | Component | Exact model | Qty | Unit price (Rs) | Supplier link | Key specs | Why this |
+|---|-----------|-------------|-----|-----------------|---------------|-----------|----------|
+| 11 | Red LED | 5 mm red LED | 1 | TODO-BOM | TODO-BOM | forward voltage about 2 V | Rule: a red LED must glow at the end zone |
+| 12 | Resistor | 220 ohm, 1/4 W | 1 | TODO-BOM | TODO-BOM | limits the LED current to about 6 mA from a 3.3 V pin | Protects the GPIO and the LED |
+
+Rule check notes:
+- The chassis (row 8) is custom-made, not a ready-made kit. The 2WD kits on the supplier site include their own 3 to 6 V motors and are ready-made mechanisms, which the rules do not allow.
+- Highest voltage in the robot is 12.6 V (3S LiPo full), below the 24 V limit.
+- One on-board start switch (row 10).
+- Add rows 11 and 12 to the totals when the prices are filled in.

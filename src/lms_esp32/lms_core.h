@@ -96,4 +96,13 @@ inline MotorCmd lineFollowStep(const int s[NUM_SENSORS], PidState &st,
   cmd.right = clampMotor((int)lroundf(p.baseSpeed - correction), p.maxSpeed);
   if (errorOut) *errorOut = error;
   return cmd;
+}// ---- Competition addition: end-box detection helper ----
+// True when every normalised sensor reading (0..1000, line = high) is at or above 'threshold'.
+// A perpendicular junction stripe also trips all five sensors, but only briefly, so the
+// caller must require this to hold for a minimum time before declaring the end box.
+inline bool allSensorsOnLine(const int s[NUM_SENSORS], int threshold) {
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    if (s[i] < threshold) return false;
+  }
+  return true;
 }

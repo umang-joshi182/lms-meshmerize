@@ -1,5 +1,7 @@
 // lms_esp32.ino - PD/PID line follower for ESP32-WROOM-32 + L298N.
 // All control logic lives in lms_core.h (tested on desktop by src/test/test_pid.cpp).
+// Race firmware note: Wi-Fi and Bluetooth are never started in this sketch
+// (the Meshmerize rules require them to be off near the arena).
 #include "lms_core.h"
 
 // ---------------- Pins (Appendix A) ----------------
@@ -9,8 +11,19 @@ const int ENB = 13, IN3 = 12;             // right motor
 // Appendix A lists IN4 = GPIO 11, but GPIO 6-11 are wired to the module's SPI flash
 // on the WROOM-32 and cannot be used as I/O. Remapped to GPIO 4 (see README).
 const int IN4 = 4;
+const int END_LED = 23;  // red LED + series resistor, lights at the end zone
 
-// ---------------- Tuning ----------------
+// ---------------- Line polarity ----------------
+// true : the line gives the HIGHER analog reading (Appendix A: darker surface = higher voltage).
+// false: the line gives the LOWER reading (for example a white line on a dark floor with a
+//        module whose output drops over a reflective surface). Check on the bench first.
+const bool LINE_IS_HIGH_RAW = true;
+
+// ---------------- End-box detection (tuning values, not measured) ----------------
+const int END_THRESHOLD = 700;         // normalised reading above this = sensor is on the line
+const unsigned long END_BOX_MS = 250;  // all five on the line this long = end box
+
+// ---------------- Control tuning ----------------
 // kp, ki, kd, integralLimit, baseSpeed, maxSpeed, recoverSpeed, lostLimit, minTotal
 PidParams params = {35.0f, 0.0f, 1.5f, 50.0f, 150, 255, 120, 50, 200};
 const unsigned long LOOP_US = 10000;  // 10 ms -> 100 Hz (lostLimit 50 = ~0.5 s)
@@ -18,6 +31,8 @@ const unsigned long LOOP_US = 10000;  // 10 ms -> 100 Hz (lostLimit 50 = ~0.5 s)
 PidState state;
 int rawMin[NUM_SENSORS], rawMax[NUM_SENSORS];
 unsigned long lastMicros = 0;
+bool finished = false;
+unsigned long allOnLineSince = 0;  // 0 = not currently all on the line
 
 // Min-max calibration: sweep the array over the line and the floor for 3 s.
 void calibrate() {
@@ -35,7 +50,7 @@ void calibrate() {
   Serial.println("Calibration done.");
 }
 
-// Read and normalise to 0..1000 (higher = darker = line).
+// Read and normalise to 0..1000 with the LINE always the high value.
 void readSensors(int out[NUM_SENSORS]) {
   for (int i = 0; i < NUM_SENSORS; i++) {
     int raw = analogRead(SENSOR_PINS[i]);
@@ -44,6 +59,7 @@ void readSensors(int out[NUM_SENSORS]) {
     long v = (long)(raw - rawMin[i]) * 1000 / range;
     if (v < 0) v = 0;
     if (v > 1000) v = 1000;
+    if (!LINE_IS_HIGH_RAW) v = 1000 - v;  // flip so that the line is high
     out[i] = (int)v;
   }
 }
@@ -56,19 +72,30 @@ void setMotor(int cmd, int inA, int inB, int en) {
   analogWrite(en, abs(cmd));
 }
 
-void setup() {
-  Serial.begin(115200);
-  int outs[] = {ENA, IN1, IN2, ENB, IN3, IN4};
-  for (int i = 0; i < 6; i++) pinMode(outs[i], OUTPUT);
-  for (int i = 0; i < NUM_SENSORS; i++) pinMode(SENSOR_PINS[i], INPUT);
+void stopMotors() {
   setMotor(0, IN1, IN2, ENA);
   setMotor(0, IN3, IN4, ENB);
+}
+
+void setup() {
+  Serial.begin(115200);
+  int outs[] = {ENA, IN1, IN2, ENB, IN3, IN4, END_LED};
+  for (int i = 0; i < 7; i++) pinMode(outs[i], OUTPUT);
+  for (int i = 0; i < NUM_SENSORS; i++) pinMode(SENSOR_PINS[i], INPUT);
+  digitalWrite(END_LED, LOW);
+  stopMotors();
   calibrate();
   delay(1000);  // time to place the robot on the line
   lastMicros = micros();
 }
 
 void loop() {
+  if (finished) {  // end box reached: stay stopped with the LED on
+    stopMotors();
+    digitalWrite(END_LED, HIGH);
+    return;
+  }
+
   unsigned long now = micros();
   if (now - lastMicros < LOOP_US) return;
   float dt = (now - lastMicros) / 1e6f;
@@ -76,6 +103,20 @@ void loop() {
 
   int s[NUM_SENSORS];
   readSensors(s);
+
+  // End box: all five sensors on the line continuously for END_BOX_MS.
+  if (allSensorsOnLine(s, END_THRESHOLD)) {
+    if (allOnLineSince == 0) allOnLineSince = millis();
+    else if (millis() - allOnLineSince >= END_BOX_MS) {
+      finished = true;
+      stopMotors();
+      digitalWrite(END_LED, HIGH);
+      Serial.println("END BOX reached");
+      return;
+    }
+  } else {
+    allOnLineSince = 0;
+  }
 
   float err = 0;
   MotorCmd c = lineFollowStep(s, state, params, dt, &err);

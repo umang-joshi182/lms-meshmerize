@@ -90,3 +90,6 @@ The ESP32 GPIO pins can supply only a few milliamps and cannot drive a motor dir
 - The diagram is a design, not a tested build; the strapping-pin note and the module's regulator limits must be checked on the real hardware.
 - The capacitor values are typical starting values, to be tuned from measurement.
 - The thresholds in the confirmation step are initial guesses.
+## 4. Addendum: end-zone LED
+
+GPIO 23 goes through a 220 ohm resistor to the anode of a red LED; the cathode goes to ground. The LED lights when the end box is detected (competition rule). The diagram above does not show it yet.

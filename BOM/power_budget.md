@@ -68,3 +68,6 @@ Typical qualitative values; exact figures depend on the product and must be take
 - Several currents (ESP32, IR modules, encoders, buck efficiency, typical motor current) are assumptions and not measurements; the plan is to measure battery current with a multimeter in series on the real robot and update the table.
 - Voltage sag and the L298N drop (about 2.5 V at 1 A) reduce motor power but do not change the battery current figure; they only increase the wasted heat.
 - Runtime is a simple capacity divided by current estimate and ignores battery ageing and temperature.
+## 6. Addendum: end-zone LED
+
+The red LED on a 3.3 V pin with a 220 ohm resistor draws about 6 mA (assuming about 2 V forward voltage), which is negligible against the totals above and is covered by their margin.

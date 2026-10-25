@@ -86,3 +86,10 @@ Pin facts about the ESP32 should be confirmed against the Espressif documentatio
 - Espressif, ESP32 datasheet and technical reference (pin functions, strapping pins, ADC).
 - Robu.in product pages for the BOM parts (links in `BOM/bom.md`).
 - Comparable 12 V N20 encoder gear motor datasheet (Waveshare DCGM-N20-12V-EN-200RPM), used only as an indicative source for stall current until the chosen motor's own figure is found.
+## Competition adaptation (Techfest Meshmerize)
+
+`docs/competition_adaptation.md` lists how the design changes for the official Techfest 2026-27 Meshmerize rules. Appendix A behaviour stays the default. Added in code: a `LINE_IS_HIGH_RAW` option for a white line on a dark floor, and end-box detection with a red LED on GPIO 23 (`allSensorsOnLine` in `lms_core.h`).
+
+To test the end-box helper on the desktop, run: g++ -std=c++11 src/test/test_end_box.cpp -o test_end_box && ./test_end_box
+
+None of the competition changes are tested on a physical robot.

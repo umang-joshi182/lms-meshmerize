@@ -88,3 +88,21 @@ function explore(node, heading):
 - Grid maze with uniform cell spacing; junction identity comes from dead reckoning (cell count and heading), which can drift without encoders.
 - The example maze and traversal are worked by hand; DFS has not been run on a physical maze.
 - Junction detection (reading the exits from the sensor array) is not implemented in the current sketch; the line follower from Task 9 handles the segments between junctions.
+## 7. Update for the Techfest Meshmerize arena
+
+The arena has paths of different lengths, 90-degree turns, T-junctions, crossings and dead ends, so the uniform-grid assumption in section 6 does not hold. Without encoders the robot cannot reliably tell whether two junctions are the same one, so a visited set is not dependable.
+
+A practical dry-run method: follow the left-hand preference and record every decision as L, S, R, or U (a U-turn at a dead end). After the dry run, simplify the recorded sequence before the actual run by replacing every pattern of turn, U-turn, turn using the standard rules:
+
+| Recorded | Replaced by |
+|---|---|
+| L U L | S |
+| L U S | R |
+| R U L | U |
+| S U S | U |
+| S U L | R |
+| L U R | U |
+
+Repeat until no U-turn remains. The result is the route replayed in the actual run.
+
+Limit: on a maze without loops this gives the shortest path. With loops the left-hand preference can circle indefinitely and the recorded route may not be the shortest; that is where DFS with a visited set is needed, which requires position tracking (for example encoders). The statement's figure shows what may be a loop near the right edge, to be checked against the real arena.
