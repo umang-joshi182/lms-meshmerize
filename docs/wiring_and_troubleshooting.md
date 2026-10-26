@@ -36,7 +36,7 @@ flowchart LR
 
 Notes:
 - GPIO 12 (IN3) is a strapping pin on the ESP32: its level at boot selects the flash voltage, so it must not be pulled high at reset. Confirm in the ESP32 datasheet; if boot problems appear, move IN3 to another free pin and change the sketch.
-- Encoder wires on the motors are left unconnected in the baseline design (optional encoder extension later, TODO-BOM).
+- The chosen motors have no encoders, so there are no encoder wires. An encoder extension would need different motors.
 - Do not connect USB and the battery rail to the ESP32 at the same time without a diode; use one power source when programming.
 
 ### Supply voltages
@@ -67,7 +67,7 @@ The ESP32 GPIO pins can supply only a few milliamps and cannot drive a motor dir
 **Symptom:** the robot runs normally while stationary, but when the motors start (or the robot accelerates or stalls) the ESP32 reboots and the serial monitor restarts.
 
 **Probable root causes (most to least likely):**
-1. **Supply sag (brownout).** Motor start-up and stall draw a large current (about 1.1 A per motor, TODO-BOM). That pulls the battery voltage down and, through the buck converter, can pull the 5 V rail and the 3.3 V regulator input below what the ESP32 needs, so its brownout detector resets it.
+1. **Supply sag (brownout).** Motor start-up and stall draw a large current (about 1.1 A per motor, assumed and to be measured). That pulls the battery voltage down and, through the buck converter, can pull the 5 V rail and the 3.3 V regulator input below what the ESP32 needs, so its brownout detector resets it.
 2. **Shared ground impedance.** Motor return current flowing through the same thin wire or breadboard rail as the ESP32 ground creates a voltage drop, so the logic ground moves relative to the rest and the ESP32 sees a glitch.
 3. **Electrical noise from the brushed motors and PWM switching** coupling into the power rail and reset (EN) line.
 4. **A weak supply path:** an under-rated or poorly set buck converter, a loose XT60 or connector, or a long thin battery lead that drops voltage under load.
