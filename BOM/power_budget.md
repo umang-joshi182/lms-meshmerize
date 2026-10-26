@@ -71,3 +71,9 @@ Typical qualitative values; exact figures depend on the product and must be take
 ## 6. Addendum: end-zone LED
 
 The red LED on a 3.3 V pin with a 220 ohm resistor draws about 6 mA (assuming about 2 V forward voltage), which is negligible against the totals above and is covered by their margin.
+
+## 7. Update after the BOM was chosen
+
+- The chosen motors (N20 12 V 600 RPM) have no encoders, so the 2 x 5 mA encoder row in section 1 does not apply. Without it the 5 V rail totals are 0.168 A idle and 0.365 A peak, which is about 0.086 A and 0.187 A at the battery. The totals above are slightly conservative; the typical runtime (about 3.8 to 3.9 h) and the worst case (about 2.4 A) do not change.
+- The supplier page for the motor does not list a stall current in the text available. Other 12 V N20 motors list about 0.6 A (200 RPM) and 0.75 A (400 RPM), so the 1.1 A per motor used above is a conservative upper bound. The real value must be measured on the bench.
+- The battery is the 3300 mAh 35C pack from the BOM.

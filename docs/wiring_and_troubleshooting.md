@@ -9,7 +9,7 @@ flowchart LR
   BAT["3S LiPo 11.1 V (12.6 V full)"] --> SW["XT60 + slide switch"]
   SW --> VBAT(("Battery rail 11.1 V"))
   VBAT -->|"motor supply"| L298["L298N driver"]
-  VBAT --> BUCK["LM2596 buck, set to 5.0 V"]
+  VBAT --> BUCK["5 V buck module (fixed 5 V output)"]
   BUCK --> V5(("5 V rail"))
   V5 -->|"Vin"| ESP["ESP32 DevKit"]
   V5 -->|"VSS logic supply"| L298
@@ -30,7 +30,7 @@ flowchart LR
 | ENB / IN3 / IN4 | GPIO 13 / 12 / 4 | Right motor. IN4 moved from GPIO 11 (SPI flash pin, not usable) |
 | L298N OUT1, OUT2 | Left motor terminals | |
 | L298N OUT3, OUT4 | Right motor terminals | |
-| Buck converter IN | Battery rail after the switch | Output set to 5.0 V with a multimeter before connecting the ESP32 |
+| Buck converter IN | Battery rail after the switch | Fixed 5 V output; measure it with a multimeter before connecting the ESP32 |
 | Buck converter OUT | ESP32 Vin and L298N logic 5 V terminal | |
 | L298N motor supply terminal | Battery rail after the switch | |
 
@@ -44,7 +44,7 @@ Notes:
 | Rail | Voltage | Source | Feeds |
 |------|---------|--------|-------|
 | Battery | 11.1 V nominal, 12.6 V full, about 9.9 V at the low cut-off | 3S LiPo | L298N motor supply, buck input |
-| 5 V | 5.0 V | Buck converter (set and checked with a multimeter) | ESP32 Vin, L298N logic supply (VSS) |
+| 5 V | 5.0 V | Buck converter (fixed 5 V, checked with a multimeter) | ESP32 Vin, L298N logic supply (VSS) |
 | 3.3 V | 3.3 V | ESP32 on-board regulator | IR sensor modules, signal levels |
 
 The L298N logic supply VSS must be 4.5 to 7 V (ST datasheet), so it is fed from the 5 V buck rail and not from the 3.3 V pin. The L298N module's on-board 5 V regulator jumper is removed so the module does not feed or fight the buck converter (TODO-BOM: confirm the jumper and regulator limits on the chosen module).
@@ -78,7 +78,7 @@ The ESP32 GPIO pins can supply only a few milliamps and cannot drive a motor dir
 1. Add the bulk capacitor across the motor supply and a small ceramic capacitor (about 100 nF) across each motor's terminals.
 2. Shorten and thicken the battery and motor ground path; connect the logic grounds at one point (star connection).
 3. Add a soft start in firmware: ramp the PWM up over some tens of milliseconds instead of jumping to full speed.
-4. Check the buck converter output is set to 5.0 V, is rated for the load, and the connectors are tight.
+4. Check the buck converter output measures 5.0 V, is rated for the load, and the connectors are tight.
 
 **How to confirm the fix:**
 - The 5 V rail minimum during motor start-up stays within a small margin of 5 V (target: dip well under 0.3 V; this threshold is a starting guess to be set from measurements).

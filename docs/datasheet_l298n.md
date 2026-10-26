@@ -37,3 +37,9 @@ The datasheet lists a junction operating range up to 130 C and includes over-tem
 
 - Figures are from the ST L298 datasheet; the cheap module may use a different bridge or regulator, so module-specific limits must be checked on the supplier page.
 - Dissipation numbers are estimates from typical saturation voltages, not measurements.
+
+## 4. Update after the BOM was chosen
+
+- Motors: N20 12 V 600 RPM. The supplier page does not list the stall current; other 12 V N20 motors list about 0.6 to 0.75 A, so the 1.1 A used above is a conservative bound and still leaves a margin below the 2 A per channel limit. The real stall current is to be measured on the bench and this file updated.
+- The driver in the BOM is a SmartElex L298N module. The on-board regulator and jumper limits must be read from its product page before connecting a fully charged 3S pack.
+- The comparison with the TB6612FNG is in `BOM/bom.md`.
