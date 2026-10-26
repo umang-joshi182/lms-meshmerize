@@ -31,7 +31,7 @@ The typical motor current of 0.3 A per motor is an assumption and must be measur
 
 ## 3. Runtime estimate
 
-Battery: 3S LiPo, 11.1 V nominal, 3300 mAh, 25C (as listed in the BOM, TODO-BOM: confirm the model and weight).
+Battery: 3S LiPo, 11.1 V nominal, 3300 mAh, 35C (as listed in the BOM; confirm the C-rating, brand and weight on the product page).
 
 Assumptions:
 - Only 80 % of the rated capacity is used (2640 mAh) to avoid deep discharge, which damages LiPo cells.
@@ -43,7 +43,7 @@ Assumptions:
 | Typical running | 0.69 A | **about 3.8 h** |
 | Worst case (stall) | 2.4 A | about 1.1 h (a stall would not last this long; shown as a lower bound) |
 
-**C-rating check:** maximum continuous discharge is 25 x 3.3 A = 82.5 A, against a worst-case need of about 2.4 A. The battery has far more current capability than needed, which means a smaller (lighter, cheaper) pack would be enough. The 3300 mAh pack is justified only by long runtime; weight and cost are the trade-off (TODO-BOM: weight and price of the chosen pack, and whether a smaller pack, for example about 800 mAh, is a better fit for the chassis).
+**C-rating check:** maximum continuous discharge is 35 x 3.3 A = 115.5 A, against a worst-case need of about 2.4 A. The battery has far more current capability than needed, which means a smaller (lighter, cheaper) pack would be enough. The 3300 mAh pack is justified only by long runtime; weight and cost are the trade-off (TODO-BOM: weight and price of the chosen pack, and whether a smaller pack, for example about 800 mAh, is a better fit for the chassis).
 
 ## 4. Chemistry comparison: LiPo vs Li-ion (18650 cells)
 

@@ -27,12 +27,12 @@ Submission for the nine selection tasks (ESP32, Arduino framework, C++; hardware
 | 1 Basic coding | Done, tested on desktop |
 | 2 Datasheet literacy | Written |
 | 3 PID control | Written (combined with Task 9 notes) |
-| 4 BOM | In progress: parts and links chosen, prices and totals still to be filled in |
+| 4 BOM | Partial: rows 1 to 7 (controller, driver, sensors, motors, battery, charger, buck converter) chosen and priced; chassis, wheels, wiring, LED, resistor and switch not finalised yet |
 | 5 Power budget | Written, several inputs are assumptions (see the file) |
 | 6 Electronics | Written |
 | 7 Wireless diagnostics | Written (no code required) |
 | 8 Maze algorithms | Written |
-| 9 LMS implementation | Code written and validated on sample inputs; not tested on a physical robot |
+| 9 LMS implementation | Code written and validated on sample inputs; not yet compiled in the Arduino IDE and not tested on a physical robot |
 
 Values in the documents that depend on the final BOM are marked `TODO-BOM` and are to be updated when the BOM is complete.
 
