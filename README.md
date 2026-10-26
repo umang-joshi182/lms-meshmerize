@@ -32,7 +32,7 @@ Submission for the nine selection tasks (ESP32, Arduino framework, C++; hardware
 | 6 Electronics | Written |
 | 7 Wireless diagnostics | Written (no code required) |
 | 8 Maze algorithms | Written |
-| 9 LMS implementation | Code written and validated on sample inputs; not yet compiled in the Arduino IDE and not tested on a physical robot |
+| 9 LMS implementation | Code written and validated on sample inputs; compiles in the Arduino IDE (Verify only) but is not tested on a physical robot |
 
 Values in the documents that depend on the final BOM are marked `TODO-BOM` and are to be updated when the BOM is complete.
 
